@@ -1,0 +1,17 @@
+[package]
+name = "schedule-native"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+futures-task = "0.3"
+async-task = "4.7"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+dispatch2.workspace = true
+libc = "0.2"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_System_Threading",
+] }

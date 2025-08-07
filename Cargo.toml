@@ -1,7 +1,6 @@
 [workspace]
-members = [ "blockon","request-native", "timeout-native"]
+members = [ "blockon","request-native", "schedule-native", "timeout-native"]
 resolver = "2"
-license = "MIT OR Apache-2.0"
 
 
 [workspace.dependencies]
