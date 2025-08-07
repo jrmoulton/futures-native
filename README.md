@@ -29,6 +29,5 @@ Platform-native timeout implementation using OS timers (Grand Central Dispatch o
 ## Features
 
 - **No specific runtime dependencies** - Works with any async runtime
-- **Platform optimized** - Leverages native OS APIs for best performance
+- **Platform optimized** - Leverages native OS APIs
 - **Standard interfaces** - Compatible with existing Rust async ecosystem
-- **Minimal overhead** - Direct OS integration without abstraction layers
