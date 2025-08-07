@@ -2,13 +2,13 @@
 
 # futures-native
 
-Platform-native async utilities for Rust
+Platform-native async utilities
 
 </div>
 
 ## Overview
 
-A collection of Rust crates providing platform-native implementations of common async patterns without runtime dependencies. These crates work with any async runtime (Tokio, async-std, smol, etc.) by leveraging OS-specific APIs directly.
+A collection crates providing platform-native implementations of common async patterns without runtime dependencies. These crates work with any async runtime (Tokio, async-std, smol, etc.) by leveraging OS-specific APIs directly.
 
 ## Packages
 
