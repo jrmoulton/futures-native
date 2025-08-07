@@ -1,0 +1,15 @@
+[package]
+name = "time-native"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+pin-project.workspace = true
+futures-util = "0.3"
+
+[dev-dependencies]
+blockon = { path = "../blockon" }
+futures-util = "0.3"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+dispatch2.workspace = true

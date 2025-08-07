@@ -1,4 +1,5 @@
 use std::{
+    future::Future,
     sync::{Arc, Condvar, Mutex},
     task::{Context, Poll, RawWaker, RawWakerVTable, Waker},
 };
