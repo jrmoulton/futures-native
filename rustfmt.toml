@@ -1,0 +1,9 @@
+unstable_features = true
+max_width = 150
+imports_granularity = "One"
+group_imports = "One"
+wrap_comments = true
+condense_wildcard_suffixes = true
+fn_call_width = 150
+format_code_in_doc_comments = true
+# indent_style = "Visual"

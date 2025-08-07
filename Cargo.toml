@@ -1,6 +1,19 @@
-[package]
-name = "futures-native"
-version = "0.1.0"
-edition = "2024"
+[workspace]
+members = ["request-native", "timeout-native"]
+resolver = "2"
 
-[dependencies]
+
+[workspace.dependencies]
+pin-project = "1.0"
+futures = "0.3"
+
+serde = "1.0"
+serde_json = "1.0"
+
+# Platform bindings
+objc2 = "0.6.1"
+objc2-foundation = "0.3.1"
+block2 = "0.6.1"
+dispatch2 = "0.3.0"
+
+

@@ -1,0 +1,10 @@
+[package]
+name = "timeout-native"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[target.'cfg(target_os = "macos")'.dependencies]
+dispatch2.workspace = true
+pin-project.workspace = true

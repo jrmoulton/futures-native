@@ -1,0 +1,35 @@
+[package]
+name = "request-native"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# Async traits and utilities
+futures.workspace = true
+pin-project.workspace = true
+
+
+# Serialization (optional)
+serde = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
+
+# HTTP types
+http = "1.0"
+http-body = "1.0"
+http-body-util = "0.1"
+bytes = "1.0"
+
+# Tower ecosystem
+tower = {version = "0.4", features = ["timeout"]}
+tower-service = "0.3"
+
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2.workspace = true
+objc2-foundation.workspace = true
+block2.workspace = true
+
+
+[features]
+json = ["dep:serde", "dep:serde_json"]
+
