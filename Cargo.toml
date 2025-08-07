@@ -1,5 +1,5 @@
 [workspace]
-members = ["request-native", "timeout-native"]
+members = [ "blockon","request-native", "timeout-native"]
 resolver = "2"
 
 
