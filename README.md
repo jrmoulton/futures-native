@@ -8,7 +8,7 @@ Platform-native async utilities
 
 ## Overview
 
-A collection crates providing platform-native implementations of common async patterns without runtime dependencies. These crates work with any async runtime (Tokio, async-std, smol, etc.) by leveraging OS-specific APIs directly.
+A collection crates providing platform-native implementations of common async patterns without runtime dependencies. These crates work without any specific async runtime by leveraging OS-specific APIs directly.
 
 ## Packages
 
