@@ -7,7 +7,7 @@ fn main() {
 
     for i in 1..=5 {
         let instant = blockon::block_on(interval.tick());
-        println!("Tick {} at {:?}", i, instant);
+        println!("Tick {i} at {instant:?}");
     }
 
     println!("Interval example completed!");

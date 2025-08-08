@@ -304,23 +304,22 @@ pub fn interval_at(start: Instant, period: Duration) -> Interval {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use futures_util::StreamExt;
+    use {super::*, futures_util::StreamExt};
 
     #[test]
     fn test_interval_basic() {
         let mut interval = interval(Duration::from_millis(30));
         let start = Instant::now();
-        
+
         let first_tick = blockon::block_on(interval.tick());
         let first_elapsed = first_tick.duration_since(start);
-        
+
         let second_tick = blockon::block_on(interval.tick());
         let second_elapsed = second_tick.duration_since(start);
-        
+
         // First tick should be immediate
         assert!(first_elapsed < Duration::from_millis(10));
-        
+
         // Second tick should be after the interval period
         assert!(second_elapsed >= Duration::from_millis(25));
         assert!(second_elapsed < Duration::from_millis(60));
@@ -331,10 +330,10 @@ mod tests {
         let start = Instant::now();
         let future_time = start + Duration::from_millis(50);
         let mut interval = interval_at(future_time, Duration::from_millis(30));
-        
+
         let first_tick = blockon::block_on(interval.tick());
         let elapsed = first_tick.duration_since(start);
-        
+
         // First tick should happen at the specified time
         assert!(elapsed >= Duration::from_millis(40));
         assert!(elapsed < Duration::from_millis(80));
@@ -343,24 +342,24 @@ mod tests {
     #[test]
     fn test_interval_stream() {
         let interval = interval(Duration::from_millis(20));
-        
+
         let ticks = blockon::block_on(async {
             let mut ticks = Vec::new();
             let mut stream = interval.take(3);
-            
+
             while let Some(instant) = stream.next().await {
                 ticks.push(instant);
             }
-            
+
             ticks
         });
-        
+
         assert_eq!(ticks.len(), 3);
-        
+
         // Check that intervals are roughly correct
         let interval_1 = ticks[1].duration_since(ticks[0]);
         let interval_2 = ticks[2].duration_since(ticks[1]);
-        
+
         // Allow some tolerance for timing
         assert!(interval_1 >= Duration::from_millis(15));
         assert!(interval_1 < Duration::from_millis(40));
@@ -371,24 +370,24 @@ mod tests {
     #[test]
     fn test_interval_reset_behaviors() {
         let mut interval = interval(Duration::from_millis(100));
-        
+
         // First tick is immediate
         let first = blockon::block_on(interval.tick());
-        
+
         // Reset immediately and check that next tick is immediate again
         interval.reset_immediately();
         let reset_tick = blockon::block_on(interval.tick());
-        
+
         // The reset tick should be very close to when we called reset
         let time_diff = reset_tick.duration_since(first);
         assert!(time_diff < Duration::from_millis(50));
-        
+
         // Test reset_after
         let before_reset = Instant::now();
         interval.reset_after(Duration::from_millis(50));
         let after_reset_tick = blockon::block_on(interval.tick());
         let reset_elapsed = after_reset_tick.duration_since(before_reset);
-        
+
         assert!(reset_elapsed >= Duration::from_millis(40));
         assert!(reset_elapsed < Duration::from_millis(80));
     }
@@ -398,10 +397,10 @@ mod tests {
         // Test Burst behavior (default)
         let mut burst_interval = interval(Duration::from_millis(10));
         assert_eq!(burst_interval.missed_tick_behavior(), MissedTickBehavior::Burst);
-        
+
         burst_interval.set_missed_tick_behavior(MissedTickBehavior::Delay);
         assert_eq!(burst_interval.missed_tick_behavior(), MissedTickBehavior::Delay);
-        
+
         burst_interval.set_missed_tick_behavior(MissedTickBehavior::Skip);
         assert_eq!(burst_interval.missed_tick_behavior(), MissedTickBehavior::Skip);
     }
@@ -417,7 +416,7 @@ mod tests {
     fn test_stream_with_combinators() {
         let result = blockon::block_on(async {
             let interval = interval(Duration::from_millis(15));
-            
+
             let sum: usize = interval
                 .take(5)
                 .enumerate()
@@ -425,10 +424,10 @@ mod tests {
                 .map(|(i, _)| i)
                 .fold(0, |acc, i| futures_util::future::ready(acc + i))
                 .await;
-            
+
             sum
         });
-        
+
         // Should sum indices 0, 2, 4 = 6
         assert_eq!(result, 6);
     }
@@ -450,15 +449,15 @@ mod tests {
         let now = Instant::now();
         let timeout = now - Duration::from_millis(100);
         let period = Duration::from_millis(50);
-        
+
         // Test Burst behavior
         let burst_next = MissedTickBehavior::Burst.next_timeout(timeout, now, period);
         assert_eq!(burst_next, timeout + period);
-        
-        // Test Delay behavior  
+
+        // Test Delay behavior
         let delay_next = MissedTickBehavior::Delay.next_timeout(timeout, now, period);
         assert_eq!(delay_next, now + period);
-        
+
         // Test Skip behavior
         let skip_next = MissedTickBehavior::Skip.next_timeout(timeout, now, period);
         // Should skip ahead to next multiple

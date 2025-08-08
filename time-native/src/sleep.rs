@@ -97,16 +97,15 @@ pub fn sleep(duration: Duration) -> Sleep {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use std::time::Instant;
+    use {super::*, std::time::Instant};
 
     #[test]
     fn test_sleep_basic() {
         let start = Instant::now();
         let duration = Duration::from_millis(50);
-        
+
         blockon::block_on(sleep(duration));
-        
+
         let elapsed = start.elapsed();
         assert!(elapsed >= duration);
         assert!(elapsed < duration + Duration::from_millis(50)); // Allow some tolerance
@@ -117,22 +116,22 @@ mod tests {
         let duration = Duration::from_millis(100);
         let _sleep_future = sleep(duration);
         let _sleep_direct = Sleep::new(duration);
-        
+
         // Should not panic during creation
     }
 
     #[test]
     fn test_sleep_cancel() {
         let mut sleep_future = Sleep::new(Duration::from_millis(1000));
-        
+
         // Cancel the sleep immediately
         sleep_future.cancel();
-        
+
         // The cancelled sleep should complete immediately
         let start = Instant::now();
         blockon::block_on(sleep_future);
         let elapsed = start.elapsed();
-        
+
         // Should complete much faster than the original 1000ms
         assert!(elapsed < Duration::from_millis(100));
     }
@@ -142,7 +141,7 @@ mod tests {
         let start = Instant::now();
         blockon::block_on(sleep(Duration::ZERO));
         let elapsed = start.elapsed();
-        
+
         // Should complete very quickly
         assert!(elapsed < Duration::from_millis(10));
     }

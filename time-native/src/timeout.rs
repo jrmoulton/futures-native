@@ -88,9 +88,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::sleep::sleep;
-    use std::time::Instant;
+    use {super::*, crate::sleep::sleep, std::time::Instant};
 
     #[test]
     fn test_timeout_success() {
@@ -98,7 +96,7 @@ mod tests {
             sleep(Duration::from_millis(30)).await;
             "completed"
         };
-        
+
         let result = blockon::block_on(timeout(Duration::from_millis(100), future));
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), "completed");
@@ -110,7 +108,7 @@ mod tests {
             sleep(Duration::from_millis(100)).await;
             "completed"
         };
-        
+
         let result = blockon::block_on(timeout(Duration::from_millis(30), future));
         assert!(result.is_err());
         assert_eq!(result.unwrap_err(), Elapsed);
@@ -119,7 +117,7 @@ mod tests {
     #[test]
     fn test_timeout_immediate_completion() {
         let future = async { "immediate" };
-        
+
         let result = blockon::block_on(timeout(Duration::from_millis(100), future));
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), "immediate");
@@ -131,7 +129,7 @@ mod tests {
             sleep(Duration::from_millis(1)).await;
             "too_slow"
         };
-        
+
         let result = blockon::block_on(timeout(Duration::ZERO, future));
         assert!(result.is_err());
         assert_eq!(result.unwrap_err(), Elapsed);
@@ -140,8 +138,8 @@ mod tests {
     #[test]
     fn test_elapsed_error_display() {
         let elapsed = Elapsed;
-        assert_eq!(format!("{}", elapsed), "operation timed out");
-        assert_eq!(format!("{:?}", elapsed), "Elapsed");
+        assert_eq!(format!("{elapsed}"), "operation timed out");
+        assert_eq!(format!("{elapsed:?}"), "Elapsed");
     }
 
     #[test]
@@ -151,19 +149,19 @@ mod tests {
         assert_eq!(error.to_string(), "operation timed out");
     }
 
-    #[test] 
+    #[test]
     fn test_timeout_timing_accuracy() {
         let start = Instant::now();
         let timeout_duration = Duration::from_millis(50);
-        
+
         let future = async {
             sleep(Duration::from_millis(200)).await;
             "never_reached"
         };
-        
+
         let result = blockon::block_on(timeout(timeout_duration, future));
         let elapsed = start.elapsed();
-        
+
         assert!(result.is_err());
         // Should timeout close to the specified duration
         assert!(elapsed >= timeout_duration);
